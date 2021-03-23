@@ -260,15 +260,18 @@ def path_2_sample(path, id_name, transform=False):
 
 
 # new function
-def multi_plots_files(file_list, axes=None, log=True, gates = None, transform=False):
+def multi_plots_files(file_list, axes=["Alexa Fluor 680-A", "PE-A"], log=True, gates = None, transform=False, filename=None):
     """
-    imports the fcs files in file_list and plots 'Alexa Fluor 680-A' vs 'PE-A' graphs for up to 16 samples in a 4x4 grid.
+    imports the fcs files in file_list and plots graphs for up to 16 samples in a 4x4 grid.
     optionally plots gates over the data
     optionally hyperlog transforms the data with HYPERLOG_B=100
     Parameters
     ----------
     file_list : list
         list of filenames
+    axes : list
+        list of axes to plot
+        default = ["Alexa Fluor 680-A", "PE-A"]
     log : bool
         whether or not to plot on a log axis (default = True).
         Do not use when transform = True
@@ -277,10 +280,10 @@ def multi_plots_files(file_list, axes=None, log=True, gates = None, transform=Fa
         default = None (don't draw gates)
     transform : bool
         Whether or not to hyperlog transform data (default = False)
+    filename : str
+        saves an image of the plot as `filename` (ex: 'plot.jpg')
+        default = None (does not save image)
     """
-    if axes == None:
-        axes = ["Alexa Fluor 680-A", "PE-A"]
-    # Show several examples from the first titration with all gates applied
     plt.figure(figsize=(10, 10))
     previous_axes = []
     xmin, xmax, ymin, ymax = 1e9, -1e9, 1e9, -1e9
@@ -306,10 +309,12 @@ def multi_plots_files(file_list, axes=None, log=True, gates = None, transform=Fa
             ax.set_ylim(ymin, ymax)
 
     plt.tight_layout()
-    plt.show()
+    if filename:
+        plt.savefig(filename, dpi=300)
+#     plt.show()
     
 
-def multi_plots_sample(sample_list, axes=None, log=True, gates = None, filename=None):
+def multi_plots_sample(sample_list, axes=["Alexa Fluor 680-A", "PE-A"], log=True, gates = None, filename=None):
     """
     graphs FACS plots for up to 16 samples in sample_list
     optionally plots gates over the data
@@ -325,13 +330,11 @@ def multi_plots_sample(sample_list, axes=None, log=True, gates = None, filename=
         Do not use when transform = True
     gates : Polygate object
         Gates to display overlaying the FACS data
-        default = None (don't draw gates)
-    transform : bool
-        Whether or not to hyperlog transform data (default = False)
+        default = None (no gates drawn)
+    filename : str
+        saves an image of the plot as `filename` (ex: 'plot.jpg')
+        default = None (does not save image)
     """
-    if axes == None:
-        axes = ["Alexa Fluor 680-A", "PE-A"]
-    # Show several examples from the first titration with all gates applied
     plt.figure(figsize=(10, 10))
     xmin, xmax, ymin, ymax = 1, 1, 1, 1
     previous_axes = []
@@ -361,4 +364,4 @@ def multi_plots_sample(sample_list, axes=None, log=True, gates = None, filename=
     plt.tight_layout()
     if filename:
         plt.savefig(filename, dpi=300)
-    plt.show()
+    # plt.show()
