@@ -1,4 +1,4 @@
-This is a modified version of a script written by Venkat [original repo](https://github.com/venkatesh-sivaraman/facs_analysis). I've made some minor changes and the code could still be made clearer in a lot of places but it does work
+This is a modified version of scripts written/compiled by Venkat [original repo](https://github.com/venkatesh-sivaraman/facs_analysis) who patched together functions from other Keating lab members. I've made some minor changes and the code could still be improved in many places. In particular it could be simpler and easier to read/use. If I make more changes to this pipeline I will update this repo.
 
 
 # FACS Analysis
@@ -22,4 +22,5 @@ This notebook requires the following modules:
 
 After installing these modules, be sure to restart the notebook kernel to make sure the modules are available.
 
-*Written by*: Venkatesh Sivaraman, February 2019, adapted from scripts by Dustin Whitney and Theresa Hwang
+*Written by*: Venkatesh Sivaraman, February 2019, adapted from scripts by Dustin Whitney and Theresa Hwang<br>
+*modified by*: Jackson Halpin, April 2021
