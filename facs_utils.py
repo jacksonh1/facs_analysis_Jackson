@@ -195,9 +195,8 @@ def vertex_control(sample, axes, num_points, results, key, log=False):
 
 
 # modified
-def run_lmfit(x, y, init0, sat0, Kd0, graph, report=False, log=False, **kwargs):
+def run_lmfit(x, y, init0, sat0, Kd0, graph, max_kd=40000, report=False, log=False, **kwargs):
     '''
-    The Mass-Titer
     x: concentration list
     y: average bin positions
     init0: lower limit
@@ -216,9 +215,12 @@ def run_lmfit(x, y, init0, sat0, Kd0, graph, report=False, log=False, **kwargs):
     def basic_fit(x, init, sat, Kd):
         return init + (sat - init) * x / (x + Kd)
 
-    gmod = Model(basic_fit)
+    gmod = Model(basic_fit, nan_policy='omit')
+    # print(gmod.param_names)
+    # print(gmod.independent_vars)
+    gmod.set_param_hint('Kd', value=0.1, min=0, max=max_kd)
+    res = gmod.fit(list(y), x=x, init=0, sat=1)
     result = gmod.fit(y, x=x, init=init0, sat=sat0, Kd=Kd0)
-    r2 = 1 - result.redchi / np.var(y, ddof = 2)
 
     init = result.params['init'].value
     sat = result.params['sat'].value
@@ -232,10 +234,10 @@ def run_lmfit(x, y, init0, sat0, Kd0, graph, report=False, log=False, **kwargs):
         if log:
             plt.xscale('log')
         #result.plot_fit(numpoints=1000)
-        return kd, sat, init, result.params['Kd'].stderr, result.chisqr, r2
+        return kd, sat, init, result.params['Kd'].stderr, result.chisqr
 
     else:
-        return kd, sat, init, result.params['Kd'].stderr, result.chisqr, r2
+        return kd, sat, init, result.params['Kd'].stderr, result.chisqr
 
     
 def transform_sample(sample, HYPERLOG_B = 100.0):

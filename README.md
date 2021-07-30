@@ -1,3 +1,6 @@
+This is a modified version of a script written by Venkat [original repo](https://github.com/venkatesh-sivaraman/facs_analysis). I've made some minor changes and the code could still be made clearer in a lot of places but it does work
+
+
 # FACS Analysis
 
 The Jupyter notebook in this repo, `facs_analysis.ipynb`, walks you through the basic steps of analyzing FACS results. For high-throughput binding experiments, the `highThroughputScripts` pipeline is available on [GitHub](https://github.com/KeatingLab/highThroughputScripts/tree/vs_optimization).
