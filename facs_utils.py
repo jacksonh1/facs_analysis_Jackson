@@ -195,8 +195,9 @@ def vertex_control(sample, axes, num_points, results, key, log=False):
 
 
 # modified
-def run_lmfit(x, y, init0, sat0, Kd0, graph, max_kd=40000, report=False, log=False, **kwargs):
+def run_lmfit(x, y, init0, sat0, Kd0, graph, report=False, log=False, **kwargs):
     '''
+    The Mass-Titer
     x: concentration list
     y: average bin positions
     init0: lower limit
@@ -218,9 +219,9 @@ def run_lmfit(x, y, init0, sat0, Kd0, graph, max_kd=40000, report=False, log=Fal
     gmod = Model(basic_fit, nan_policy='omit')
     # print(gmod.param_names)
     # print(gmod.independent_vars)
-    gmod.set_param_hint('Kd', value=0.1, min=0, max=max_kd)
-    res = gmod.fit(list(y), x=x, init=0, sat=1)
-    result = gmod.fit(y, x=x, init=init0, sat=sat0, Kd=Kd0)
+    gmod.set_param_hint('Kd', value=Kd0, min=0, max=40000)
+    result = gmod.fit(list(y), x=x, init=1, sat=3000)
+    r2 = 1 - result.redchi / np.var(y, ddof = 2)
 
     init = result.params['init'].value
     sat = result.params['sat'].value
@@ -234,12 +235,12 @@ def run_lmfit(x, y, init0, sat0, Kd0, graph, max_kd=40000, report=False, log=Fal
         if log:
             plt.xscale('log')
         #result.plot_fit(numpoints=1000)
-        return kd, sat, init, result.params['Kd'].stderr, result.chisqr
+        return kd, sat, init, result.params['Kd'].stderr, result.chisqr, r2
 
     else:
-        return kd, sat, init, result.params['Kd'].stderr, result.chisqr
+        return kd, sat, init, result.params['Kd'].stderr, result.chisqr, r2
 
-    
+
 def transform_sample(sample, HYPERLOG_B = 100.0):
     """Performs the standard hyperlog transformation on the given sample.
     uses b=100 and transforms the follwing axis: ["FSC-H", "SSC-H",
