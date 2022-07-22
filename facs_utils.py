@@ -4,20 +4,20 @@
 # // Notes are added as comments directly above function definition
 # ==============================================================================
 
+import os
+import os.path
+import time
+from math import ceil, floor
+
+import FlowCytometryTools
+import ipywidgets as widgets
 import matplotlib.pyplot as plt
 import numpy as np
-import os.path
-import os
-import FlowCytometryTools
-from FlowCytometryTools import FCMeasurement
-from FlowCytometryTools import ThresholdGate, PolyGate
-import pandas as pd 
-from lmfit import Model, Parameters, Minimizer
+import pandas as pd
+from FlowCytometryTools import FCMeasurement, PolyGate, ThresholdGate
 from ipywidgets import interactive
-import time
-import ipywidgets as widgets
+from lmfit import Minimizer, Model, Parameters
 from matplotlib.patches import Polygon
-from math import floor, ceil
 
 ROUND_INTERVAL = 5.0
 
@@ -216,11 +216,11 @@ def run_lmfit(x, y, init0, sat0, Kd0, graph, report=False, log=False, **kwargs):
     def basic_fit(x, init, sat, Kd):
         return init + (sat - init) * x / (x + Kd)
 
-    gmod = Model(basic_fit, nan_policy='omit')
+    gmod = Model(basic_fit)
     # print(gmod.param_names)
     # print(gmod.independent_vars)
     gmod.set_param_hint('Kd', value=Kd0, min=0, max=40000)
-    result = gmod.fit(list(y), x=x, init=1, sat=3000)
+    result = gmod.fit(list(y), x=x, init=init0, sat=sat0)
     r2 = 1 - result.redchi / np.var(y, ddof = 2)
 
     init = result.params['init'].value
